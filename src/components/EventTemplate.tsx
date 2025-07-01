@@ -11,11 +11,16 @@ const EventTemplate: React.FC<EventTemplateProps> = ({
   template,
   onDragStart,
 }) => {
+  const handleDragStart = (e: React.DragEvent) => {
+    console.log("EventTemplate drag start triggered:", template);
+    onDragStart(e, template);
+  };
+
   return (
     <div
       className="event-template"
       draggable
-      onDragStart={(e) => onDragStart(e, template)}
+      onDragStart={handleDragStart}
       style={{ borderLeftColor: template.color }}
     >
       <div className="template-header">
