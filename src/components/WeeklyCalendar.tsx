@@ -1,5 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { WeeklyEvent, EventTemplate } from "../types";
+import {
+  getCurrentWeekDates,
+  formatDateDisplay,
+  getDayOfWeek,
+} from "../utils/weeklyUtils";
 import "./WeeklyCalendar.css";
 
 interface WeeklyCalendarProps {
@@ -13,7 +18,7 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
   onEventAdd,
   onEventDelete,
 }) => {
-  const days = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
+  const weekDates = getCurrentWeekDates();
   const timeSlots = Array.from(
     { length: 24 },
     (_, i) => `${i.toString().padStart(2, "0")}:00`
@@ -39,12 +44,12 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
     console.log("Drag leave:", e.currentTarget);
   };
 
-  const handleDrop = (e: React.DragEvent, day: number, time: string) => {
+  const handleDrop = (e: React.DragEvent, date: string, time: string) => {
     e.preventDefault();
     e.stopPropagation();
     e.currentTarget.classList.remove("drag-over");
 
-    console.log("Drop event triggered:", { day, time });
+    console.log("Drop event triggered:", { date, time });
 
     try {
       const templateData = e.dataTransfer.getData("text/plain");
@@ -76,7 +81,7 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
       const newEvent: WeeklyEvent = {
         id: `${Date.now()}-${Math.random()}`,
         templateId: draggedTemplate.id,
-        day,
+        date,
         startTime,
         endTime,
         title: draggedTemplate.title,
@@ -92,9 +97,9 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
     }
   };
 
-  const getEventsForSlot = (day: number, time: string) => {
+  const getEventsForSlot = (date: string, time: string) => {
     return events.filter(
-      (event) => event.day === day && event.startTime === time
+      (event) => event.date === date && event.startTime === time
     );
   };
 
@@ -102,9 +107,10 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
     <div className="weekly-calendar">
       <div className="calendar-header">
         <div className="time-column-header">时间</div>
-        {days.map((day) => (
-          <div key={day} className="day-header">
-            {day}
+        {weekDates.map((date) => (
+          <div key={date} className="day-header">
+            <div className="date-display">{formatDateDisplay(date)}</div>
+            <div className="day-display">{getDayOfWeek(date)}</div>
           </div>
         ))}
       </div>
@@ -113,16 +119,16 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
         {timeSlots.map((time) => (
           <div key={time} className="time-row">
             <div className="time-slot">{time}</div>
-            {days.map((_, dayIndex) => {
-              const slotEvents = getEventsForSlot(dayIndex, time);
+            {weekDates.map((date) => {
+              const slotEvents = getEventsForSlot(date, time);
               return (
                 <div
-                  key={`${dayIndex}-${time}`}
+                  key={`${date}-${time}`}
                   className="calendar-cell"
                   onDragOver={handleDragOver}
                   onDragEnter={handleDragEnter}
                   onDragLeave={handleDragLeave}
-                  onDrop={(e) => handleDrop(e, dayIndex, time)}
+                  onDrop={(e) => handleDrop(e, date, time)}
                 >
                   {slotEvents.map((event) => (
                     <div

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { RoutineItem, WeeklyEvent, EventTemplate } from "./types";
-import { defaultRoutines, getRoutineCategories } from "./data/routines";
+import { getRoutineCategories } from "./data/routines";
 import eventTemplatesData from "./data/eventTemplates.json";
 import RoutineCategory from "./components/RoutineCategory";
 import ProgressBar from "./components/ProgressBar";
@@ -12,10 +12,7 @@ import "./App.css";
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<"weekly" | "daily">("weekly");
   const [weeklyEvents, setWeeklyEvents] = useState<WeeklyEvent[]>([]);
-  const [dailyRoutines, setDailyRoutines] = useState<RoutineItem[]>(() => {
-    const saved = localStorage.getItem("daily-routines");
-    return saved ? JSON.parse(saved) : defaultRoutines;
-  });
+  const [dailyRoutines, setDailyRoutines] = useState<RoutineItem[]>([]);
 
   const [currentDate] = useState(new Date().toLocaleDateString("zh-CN"));
   const eventTemplates: EventTemplate[] = eventTemplatesData.eventTemplates;
@@ -33,8 +30,8 @@ const App: React.FC = () => {
   }, []);
 
   const convertWeeklyEventsToDailyRoutines = () => {
-    const today = new Date().getDay();
-    const todayEvents = weeklyEvents.filter((event) => event.day === today);
+    const today = new Date().toISOString().split("T")[0];
+    const todayEvents = weeklyEvents.filter((event) => event.date === today);
 
     const routines: RoutineItem[] = todayEvents.map((event, index) => ({
       id: `weekly-${event.id}`,
@@ -45,8 +42,7 @@ const App: React.FC = () => {
       category: getCategoryFromTime(event.startTime),
     }));
 
-    const allRoutines = [...defaultRoutines, ...routines];
-    setDailyRoutines(allRoutines);
+    setDailyRoutines(routines);
   };
 
   const getCategoryFromTime = (
@@ -136,40 +132,58 @@ const App: React.FC = () => {
           </div>
         ) : (
           <div className="daily-view">
-            <div className="overall-progress">
-              <ProgressBar
-                completed={totalCompleted}
-                total={totalRoutines}
-                label="今日总体进度"
-              />
-              <div className="progress-stats">
-                <span className="stat-item">
-                  已完成: <strong>{totalCompleted}</strong>
-                </span>
-                <span className="stat-item">
-                  总计: <strong>{totalRoutines}</strong>
-                </span>
-                <span className="stat-item">
-                  完成率: <strong>{overallProgress}%</strong>
-                </span>
+            {totalRoutines > 0 ? (
+              <>
+                <div className="overall-progress">
+                  <ProgressBar
+                    completed={totalCompleted}
+                    total={totalRoutines}
+                    label="今日总体进度"
+                  />
+                  <div className="progress-stats">
+                    <span className="stat-item">
+                      已完成: <strong>{totalCompleted}</strong>
+                    </span>
+                    <span className="stat-item">
+                      总计: <strong>{totalRoutines}</strong>
+                    </span>
+                    <span className="stat-item">
+                      完成率: <strong>{overallProgress}%</strong>
+                    </span>
+                  </div>
+                </div>
+
+                <div className="reset-section">
+                  <button className="reset-button" onClick={handleResetAll}>
+                    重置所有进度
+                  </button>
+                </div>
+
+                <main className="app-main">
+                  {categories.map((category) => (
+                    <RoutineCategory
+                      key={category.name}
+                      category={category}
+                      onToggleItem={handleToggleRoutine}
+                    />
+                  ))}
+                </main>
+              </>
+            ) : (
+              <div className="empty-state">
+                <div className="empty-icon">📅</div>
+                <h2 className="empty-title">今日暂无安排</h2>
+                <p className="empty-description">
+                  请在周历界面为今天安排一些活动，然后回到这里查看打卡进度。
+                </p>
+                <button
+                  className="switch-view-btn"
+                  onClick={() => setCurrentView("weekly")}
+                >
+                  去周历安排
+                </button>
               </div>
-            </div>
-
-            <div className="reset-section">
-              <button className="reset-button" onClick={handleResetAll}>
-                重置所有进度
-              </button>
-            </div>
-
-            <main className="app-main">
-              {categories.map((category) => (
-                <RoutineCategory
-                  key={category.name}
-                  category={category}
-                  onToggleItem={handleToggleRoutine}
-                />
-              ))}
-            </main>
+            )}
           </div>
         )}
 

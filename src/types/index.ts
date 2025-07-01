@@ -23,11 +23,11 @@ export interface EventTemplate {
   category: string;
 }
 
-// 周历事件类型
+// 周历事件类型 - 更新为使用具体日期
 export interface WeeklyEvent {
   id: string;
   templateId: string;
-  day: number; // 0-6 (周日-周六)
+  date: string; // YYYY-MM-DD 格式
   startTime: string; // HH:MM 格式
   endTime: string; // HH:MM 格式
   title: string;
@@ -38,7 +38,7 @@ export interface WeeklyEvent {
 
 // 时间槽类型
 export interface TimeSlot {
-  day: number;
+  date: string;
   time: string;
   events: WeeklyEvent[];
 }

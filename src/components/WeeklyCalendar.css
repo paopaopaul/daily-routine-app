@@ -26,6 +26,27 @@
   background: #e9ecef;
 }
 
+.day-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px;
+}
+
+.date-display {
+  font-size: 16px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.day-display {
+  font-size: 12px;
+  color: #666;
+  font-weight: 500;
+}
+
 .calendar-body {
   max-height: 600px;
   overflow-y: auto;
@@ -133,5 +154,13 @@
   .calendar-event {
     font-size: 10px;
     padding: 2px 4px;
+  }
+  
+  .date-display {
+    font-size: 14px;
+  }
+  
+  .day-display {
+    font-size: 10px;
   }
 } 
