@@ -1,0 +1,131 @@
+.app {
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.app-title {
+  font-size: 36px;
+  font-weight: 800;
+  color: #333;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.app-date {
+  font-size: 18px;
+  color: #666;
+  font-weight: 500;
+}
+
+.overall-progress {
+  background: #f8f9fa;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+  border: 1px solid #e9ecef;
+}
+
+.progress-stats {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 16px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.stat-item {
+  font-size: 14px;
+  color: #666;
+  background: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.reset-section {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.reset-button {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.reset-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+}
+
+.reset-button:active {
+  transform: translateY(0);
+}
+
+.app-main {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.app-footer {
+  text-align: center;
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid #e9ecef;
+}
+
+.app-footer p {
+  color: #666;
+  font-size: 14px;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .app {
+    padding: 10px;
+  }
+  
+  .app-container {
+    padding: 20px;
+  }
+  
+  .app-title {
+    font-size: 28px;
+  }
+  
+  .progress-stats {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .stat-item {
+    width: 100%;
+    text-align: center;
+  }
+} 
