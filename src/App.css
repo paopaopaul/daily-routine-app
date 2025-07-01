@@ -4,7 +4,7 @@
 }
 
 .app-container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   background: rgba(255, 255, 255, 0.95);
   border-radius: 20px;
@@ -33,6 +33,32 @@
   font-size: 18px;
   color: #666;
   font-weight: 500;
+}
+
+/* 周历视图样式 */
+.weekly-view {
+  margin: 20px 0;
+}
+
+.weekly-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.event-panel-container {
+  position: sticky;
+  top: 20px;
+}
+
+.calendar-container {
+  min-height: 600px;
+}
+
+/* 每日视图样式 */
+.daily-view {
+  margin: 20px 0;
 }
 
 .overall-progress {
@@ -106,6 +132,17 @@
   font-style: italic;
 }
 
+@media (max-width: 1200px) {
+  .weekly-layout {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .event-panel-container {
+    position: static;
+  }
+}
+
 @media (max-width: 768px) {
   .app {
     padding: 10px;
@@ -127,5 +164,9 @@
   .stat-item {
     width: 100%;
     text-align: center;
+  }
+  
+  .weekly-layout {
+    gap: 12px;
   }
 } 

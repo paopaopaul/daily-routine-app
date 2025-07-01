@@ -1,15 +1,32 @@
 # 每日例行程序应用
 
-一个使用 TypeScript + React 构建的交互式每日例行程序管理应用，具有进度条显示和本地存储功能。
+一个使用 TypeScript + React 构建的交互式每日例行程序管理应用，具有双界面系统：周历拖拽安排和每日打卡追踪。
 
 ## 功能特性
 
-- 📅 **每日例行程序管理** - 按时间段分类管理日常任务
+- 📅 **双界面系统** - 周历拖拽界面 + 每日打卡界面
+- 🎯 **拖拽功能** - 从事件面板拖拽模块到周历时间表
 - 📊 **进度条显示** - 实时显示完成进度和统计数据
-- 🎯 **交互式操作** - 点击即可标记任务完成/未完成
 - 💾 **本地存储** - 自动保存进度到浏览器本地存储
 - 📱 **响应式设计** - 支持桌面和移动设备
 - 🎨 **现代 UI 设计** - 美观的渐变背景和卡片式布局
+- ⚙️ **JSON 配置** - 通过外部 JSON 文件管理事件模板
+
+## 界面说明
+
+### 1. 周历安排界面
+
+- **左侧事件面板** - 显示可拖拽的事件模板
+- **右侧周历表格** - 7 天 × 24 小时的时间网格
+- **拖拽操作** - 将事件拖拽到指定时间槽
+- **删除功能** - 点击事件上的 × 按钮删除
+
+### 2. 每日打卡界面
+
+- **基于周历设置** - 自动显示当天的安排
+- **进度追踪** - 实时显示完成进度
+- **分类管理** - 按时间段分类显示任务
+- **重置功能** - 一键重置所有进度
 
 ## 技术栈
 
@@ -17,6 +34,7 @@
 - **TypeScript** - 类型安全的 JavaScript
 - **CSS3** - 样式和动画
 - **LocalStorage** - 本地数据存储
+- **HTML5 Drag & Drop** - 拖拽功能
 
 ## 安装和运行
 
@@ -38,45 +56,77 @@ npm start
 
 ```
 src/
-├── components/          # React组件
-│   ├── ProgressBar.tsx  # 进度条组件
-│   ├── RoutineItem.tsx  # 单个任务项组件
-│   └── RoutineCategory.tsx # 任务分类组件
-├── data/               # 数据文件
-│   └── routines.ts     # 默认例行程序数据
-├── types/              # TypeScript类型定义
-│   └── index.ts        # 接口定义
-├── App.tsx             # 主应用组件
-├── App.css             # 主应用样式
-├── index.tsx           # 应用入口
-└── index.css           # 全局样式
+├── components/              # React组件
+│   ├── ProgressBar.tsx      # 进度条组件
+│   ├── RoutineItem.tsx      # 单个任务项组件
+│   ├── RoutineCategory.tsx  # 任务分类组件
+│   ├── WeeklyCalendar.tsx   # 周历组件
+│   ├── EventPanel.tsx       # 事件面板组件
+│   ├── EventTemplate.tsx    # 事件模板组件
+│   └── ViewToggle.tsx       # 视图切换组件
+├── data/                   # 数据文件
+│   ├── routines.ts         # 默认例行程序数据
+│   └── eventTemplates.json # 事件模板配置
+├── types/                  # TypeScript类型定义
+│   └── index.ts            # 接口定义
+├── utils/                  # 工具函数
+│   └── weeklyUtils.ts      # 周历相关工具
+├── App.tsx                 # 主应用组件
+├── App.css                 # 主应用样式
+├── index.tsx               # 应用入口
+└── index.css               # 全局样式
 ```
 
 ## 使用说明
+
+### 周历安排
+
+1. **查看事件模板** - 在左侧面板查看可用的事件模板
+2. **拖拽安排** - 将事件拖拽到右侧周历的指定时间槽
+3. **删除事件** - 点击事件上的 × 按钮删除
+4. **切换视图** - 点击"每日打卡"按钮查看当天安排
+
+### 每日打卡
 
 1. **查看进度** - 应用会自动显示今日的总体完成进度
 2. **完成任务** - 点击任务项右侧的圆圈按钮来标记完成/未完成
 3. **分类查看** - 任务按早晨、下午、晚上、夜间四个时间段分类
 4. **重置进度** - 点击"重置所有进度"按钮可以清空所有完成状态
-5. **自动保存** - 所有操作会自动保存到浏览器本地存储
 
-## 自定义例行程序
+## 自定义事件模板
 
-你可以在 `src/data/routines.ts` 文件中修改默认的例行程序：
+你可以在 `src/data/eventTemplates.json` 文件中修改事件模板：
 
-```typescript
-export const defaultRoutines: RoutineItem[] = [
-  {
-    id: "1",
-    title: "你的任务标题",
-    description: "任务描述",
-    time: "08:00",
-    completed: false,
-    category: "morning", // 'morning' | 'afternoon' | 'evening' | 'night'
-  },
-  // ... 更多任务
-];
+```json
+{
+  "eventTemplates": [
+    {
+      "id": "class",
+      "title": "上课",
+      "description": "课程学习时间",
+      "duration": 4,
+      "color": "#FF6B6B",
+      "category": "学习"
+    }
+  ]
+}
 ```
+
+### 模板属性说明
+
+- `id`: 唯一标识符
+- `title`: 事件标题
+- `description`: 事件描述
+- `duration`: 持续时间（小时）
+- `color`: 事件颜色（十六进制）
+- `category`: 事件分类
+
+## 数据持久化
+
+应用会自动保存以下数据到浏览器本地存储：
+
+- 周历事件安排 (`weekly-events`)
+- 每日打卡进度 (`daily-routines`)
 
 ## 构建生产版本
 
