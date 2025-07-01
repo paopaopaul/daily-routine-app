@@ -13,55 +13,83 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
   onEventAdd,
   onEventDelete,
 }) => {
-  const [draggedTemplate, setDraggedTemplate] = useState<EventTemplate | null>(
-    null
-  );
-
   const days = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
   const timeSlots = Array.from(
     { length: 24 },
     (_, i) => `${i.toString().padStart(2, "0")}:00`
   );
 
-  // 这个函数在EventPanel中处理，这里不需要
-  // const handleDragStart = (e: React.DragEvent, template: EventTemplate) => {
-  //   setDraggedTemplate(template);
-  //   e.dataTransfer.setData("text/plain", JSON.stringify(template));
-  // };
-
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
+    e.stopPropagation();
+    e.currentTarget.classList.add("drag-over");
+    console.log("Drag over:", e.currentTarget);
+  };
+
+  const handleDragEnter = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log("Drag enter:", e.currentTarget);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    e.currentTarget.classList.remove("drag-over");
+    console.log("Drag leave:", e.currentTarget);
   };
 
   const handleDrop = (e: React.DragEvent, day: number, time: string) => {
     e.preventDefault();
+    e.stopPropagation();
+    e.currentTarget.classList.remove("drag-over");
 
-    if (!draggedTemplate) return;
+    console.log("Drop event triggered:", { day, time });
 
-    const [hours, minutes] = time.split(":").map(Number);
-    const startTime = `${hours.toString().padStart(2, "0")}:${minutes
-      .toString()
-      .padStart(2, "0")}`;
+    try {
+      const templateData = e.dataTransfer.getData("text/plain");
+      console.log("Template data:", templateData);
 
-    const endHours = hours + draggedTemplate.duration;
-    const endTime = `${endHours.toString().padStart(2, "0")}:${minutes
-      .toString()
-      .padStart(2, "0")}`;
+      if (!templateData) {
+        console.log("No template data found in dataTransfer");
+        return;
+      }
 
-    const newEvent: WeeklyEvent = {
-      id: `${Date.now()}-${Math.random()}`,
-      templateId: draggedTemplate.id,
-      day,
-      startTime,
-      endTime,
-      title: draggedTemplate.title,
-      description: draggedTemplate.description,
-      color: draggedTemplate.color,
-      category: draggedTemplate.category,
-    };
+      const draggedTemplate: EventTemplate = JSON.parse(templateData);
+      console.log("Parsed template:", draggedTemplate);
 
-    onEventAdd(newEvent);
-    setDraggedTemplate(null);
+      if (!draggedTemplate) {
+        console.log("No template data found");
+        return;
+      }
+
+      const [hours, minutes] = time.split(":").map(Number);
+      const startTime = `${hours.toString().padStart(2, "0")}:${minutes
+        .toString()
+        .padStart(2, "0")}`;
+
+      const endHours = hours + draggedTemplate.duration;
+      const endTime = `${endHours.toString().padStart(2, "0")}:${minutes
+        .toString()
+        .padStart(2, "0")}`;
+
+      const newEvent: WeeklyEvent = {
+        id: `${Date.now()}-${Math.random()}`,
+        templateId: draggedTemplate.id,
+        day,
+        startTime,
+        endTime,
+        title: draggedTemplate.title,
+        description: draggedTemplate.description,
+        color: draggedTemplate.color,
+        category: draggedTemplate.category,
+      };
+
+      console.log("Creating new event:", newEvent);
+      onEventAdd(newEvent);
+    } catch (error) {
+      console.error("Error parsing dragged template:", error);
+    }
   };
 
   const getEventsForSlot = (day: number, time: string) => {
@@ -92,6 +120,8 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
                   key={`${dayIndex}-${time}`}
                   className="calendar-cell"
                   onDragOver={handleDragOver}
+                  onDragEnter={handleDragEnter}
+                  onDragLeave={handleDragLeave}
                   onDrop={(e) => handleDrop(e, dayIndex, time)}
                 >
                   {slotEvents.map((event) => (

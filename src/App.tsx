@@ -116,10 +116,12 @@ const App: React.FC = () => {
                 <EventPanel
                   templates={eventTemplates}
                   onDragStart={(e, template) => {
+                    console.log("Drag start:", template);
                     e.dataTransfer.setData(
                       "text/plain",
                       JSON.stringify(template)
                     );
+                    e.dataTransfer.effectAllowed = "copy";
                   }}
                 />
               </div>
