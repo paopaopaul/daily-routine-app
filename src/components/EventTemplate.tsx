@@ -12,7 +12,8 @@ const EventTemplate: React.FC<EventTemplateProps> = ({
   onDragStart,
 }) => {
   const handleDragStart = (e: React.DragEvent) => {
-    console.log("EventTemplate drag start triggered:", template);
+    e.dataTransfer.setData("text/plain", JSON.stringify(template));
+    e.dataTransfer.effectAllowed = "copy";
     onDragStart(e, template);
   };
 

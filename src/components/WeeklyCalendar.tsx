@@ -19,6 +19,7 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
   onEventDelete,
 }) => {
   const weekDates = getCurrentWeekDates();
+
   const timeSlots = Array.from(
     { length: 24 },
     (_, i) => `${i.toString().padStart(2, "0")}:00`
@@ -28,20 +29,17 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
     e.preventDefault();
     e.stopPropagation();
     e.currentTarget.classList.add("drag-over");
-    console.log("Drag over:", e.currentTarget);
   };
 
   const handleDragEnter = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log("Drag enter:", e.currentTarget);
   };
 
   const handleDragLeave = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     e.currentTarget.classList.remove("drag-over");
-    console.log("Drag leave:", e.currentTarget);
   };
 
   const handleDrop = (e: React.DragEvent, date: string, time: string) => {
@@ -49,22 +47,16 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
     e.stopPropagation();
     e.currentTarget.classList.remove("drag-over");
 
-    console.log("Drop event triggered:", { date, time });
-
     try {
       const templateData = e.dataTransfer.getData("text/plain");
-      console.log("Template data:", templateData);
 
       if (!templateData) {
-        console.log("No template data found in dataTransfer");
         return;
       }
 
       const draggedTemplate: EventTemplate = JSON.parse(templateData);
-      console.log("Parsed template:", draggedTemplate);
 
       if (!draggedTemplate) {
-        console.log("No template data found");
         return;
       }
 
@@ -90,7 +82,6 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
         category: draggedTemplate.category,
       };
 
-      console.log("Creating new event:", newEvent);
       onEventAdd(newEvent);
     } catch (error) {
       console.error("Error parsing dragged template:", error);

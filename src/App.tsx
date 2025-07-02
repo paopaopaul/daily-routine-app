@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { RoutineItem, WeeklyEvent, EventTemplate } from "./types";
-import { getRoutineCategories } from "./data/routines";
-import eventTemplatesData from "./data/eventTemplates.json";
-import RoutineCategory from "./components/RoutineCategory";
+import "./App.css";
 import ProgressBar from "./components/ProgressBar";
+import RoutineCategory from "./components/RoutineCategory";
+import ViewToggle from "./components/ViewToggle";
 import WeeklyCalendar from "./components/WeeklyCalendar";
 import EventPanel from "./components/EventPanel";
-import ViewToggle from "./components/ViewToggle";
-import "./App.css";
+import { RoutineItem } from "./types";
+import { WeeklyEvent, EventTemplate } from "./types";
+import eventTemplatesData from "./data/eventTemplates.json";
+import { getRoutineCategories } from "./data/routines";
+import { getCategoryFromTime } from "./utils/weeklyUtils";
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<"weekly" | "daily">("weekly");
@@ -30,34 +32,26 @@ const App: React.FC = () => {
   }, []);
 
   const convertWeeklyEventsToDailyRoutines = () => {
-    const today = new Date().toISOString().split("T")[0];
-    console.log("Converting events for today:", today);
-    console.log("All weekly events:", weeklyEvents);
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    const todayString = `${year}-${month}-${day}`;
 
-    const todayEvents = weeklyEvents.filter((event) => event.date === today);
-    console.log("Today's events:", todayEvents);
+    const todayEvents = weeklyEvents.filter(
+      (event) => event.date === todayString
+    );
 
-    const routines: RoutineItem[] = todayEvents.map((event, index) => ({
-      id: `weekly-${event.id}`,
+    const routines = todayEvents.map((event) => ({
+      id: event.id,
       title: event.title,
       description: event.description,
       time: event.startTime,
-      completed: false,
       category: getCategoryFromTime(event.startTime),
+      completed: false,
     }));
 
-    console.log("Converted routines:", routines);
     setDailyRoutines(routines);
-  };
-
-  const getCategoryFromTime = (
-    time: string
-  ): "morning" | "afternoon" | "evening" | "night" => {
-    const hour = parseInt(time.split(":")[0]);
-    if (hour >= 6 && hour < 12) return "morning";
-    if (hour >= 12 && hour < 18) return "afternoon";
-    if (hour >= 18 && hour < 22) return "evening";
-    return "night";
   };
 
   const handleViewChange = (view: "weekly" | "daily") => {
@@ -84,16 +78,13 @@ const App: React.FC = () => {
   };
 
   const handleEventAdd = (event: WeeklyEvent) => {
-    console.log("Adding new event:", event);
     setWeeklyEvents((prev) => {
       const newEvents = [...prev, event];
-      console.log("Updated weekly events:", newEvents);
       return newEvents;
     });
   };
 
   const handleEventDelete = (eventId: string) => {
-    console.log("Deleting event:", eventId);
     setWeeklyEvents((prev) => prev.filter((event) => event.id !== eventId));
   };
 
@@ -112,9 +103,6 @@ const App: React.FC = () => {
         <header className="app-header">
           <h1 className="app-title">每日例行程序</h1>
           <div className="app-date">{currentDate}</div>
-          <div style={{ fontSize: "12px", color: "#999", marginTop: "4px" }}>
-            调试信息: 今天日期 = {new Date().toISOString().split("T")[0]}
-          </div>
         </header>
 
         <ViewToggle currentView={currentView} onViewChange={handleViewChange} />
@@ -126,7 +114,6 @@ const App: React.FC = () => {
                 <EventPanel
                   templates={eventTemplates}
                   onDragStart={(e, template) => {
-                    console.log("Drag start:", template);
                     e.dataTransfer.setData(
                       "text/plain",
                       JSON.stringify(template)
@@ -141,36 +128,6 @@ const App: React.FC = () => {
                   onEventAdd={handleEventAdd}
                   onEventDelete={handleEventDelete}
                 />
-                <div style={{ marginTop: "20px", textAlign: "center" }}>
-                  <button
-                    onClick={() => {
-                      const today = new Date().toISOString().split("T")[0];
-                      const testEvent: WeeklyEvent = {
-                        id: `test-${Date.now()}`,
-                        templateId: "test",
-                        date: today,
-                        startTime: "14:00",
-                        endTime: "15:00",
-                        title: "测试事件",
-                        description: "这是一个测试事件",
-                        color: "#FF6B6B",
-                        category: "测试",
-                      };
-                      console.log("Adding test event:", testEvent);
-                      handleEventAdd(testEvent);
-                    }}
-                    style={{
-                      background: "#4CAF50",
-                      color: "white",
-                      border: "none",
-                      padding: "8px 16px",
-                      borderRadius: "4px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    添加测试事件
-                  </button>
-                </div>
               </div>
             </div>
           </div>
@@ -195,19 +152,6 @@ const App: React.FC = () => {
                       完成率: <strong>{overallProgress}%</strong>
                     </span>
                   </div>
-                </div>
-
-                <div className="reset-section">
-                  <button className="reset-button" onClick={handleResetAll}>
-                    重置所有进度
-                  </button>
-                  <button
-                    className="refresh-button"
-                    onClick={convertWeeklyEventsToDailyRoutines}
-                    style={{ marginLeft: "10px" }}
-                  >
-                    刷新今日安排
-                  </button>
                 </div>
 
                 <main className="app-main">

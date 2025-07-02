@@ -9,16 +9,19 @@ interface RoutineItemProps {
 
 const RoutineItem: React.FC<RoutineItemProps> = ({ item, onToggle }) => {
   return (
-    <div className={`routine-item ${item.completed ? "completed" : ""}`}>
+    <div
+      className={`routine-item ${item.completed ? "completed" : ""}`}
+      onClick={() => onToggle(item.id)}
+      style={{ cursor: "pointer" }}
+    >
       <div className="routine-item-header">
         <div className="routine-item-time">{item.time}</div>
-        <button
+        <span
           className={`toggle-button ${item.completed ? "completed" : ""}`}
-          onClick={() => onToggle(item.id)}
           aria-label={item.completed ? "标记为未完成" : "标记为已完成"}
         >
           {item.completed ? "✓" : "○"}
-        </button>
+        </span>
       </div>
       <div className="routine-item-content">
         <h3 className="routine-item-title">{item.title}</h3>
