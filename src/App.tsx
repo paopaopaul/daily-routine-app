@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import ProgressBar from "./components/ProgressBar";
-import RoutineCategory from "./components/RoutineCategory";
 import RoutineItem from "./components/RoutineItem";
 import ViewToggle from "./components/ViewToggle";
 import WeeklyCalendar from "./components/WeeklyCalendar";
@@ -385,10 +384,6 @@ const App: React.FC = () => {
             )}
           </div>
         )}
-
-        <footer className="app-footer">
-          <p>保持规律的生活习惯，让每一天都充满活力！</p>
-        </footer>
       </div>
     </div>
   );

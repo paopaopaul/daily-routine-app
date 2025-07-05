@@ -235,15 +235,13 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
                             backgroundColor: event.color,
                           }}
                         >
-                          <div className="event-content">
-                            <span className="event-title">{event.title}</span>
-                            <button
-                              className="delete-event-btn"
-                              onClick={() => onEventDelete(event.id)}
-                            >
-                              ×
-                            </button>
-                          </div>
+                          <span className="event-title">{event.title}</span>
+                          <button
+                            className="delete-event-btn"
+                            onClick={() => onEventDelete(event.id)}
+                          >
+                            ×
+                          </button>
                         </div>
                       );
                     })}
