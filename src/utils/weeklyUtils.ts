@@ -14,7 +14,6 @@ export const generateRepeatingEvents = (
     startTime,
     endTime,
     title: template.title,
-    description: template.description,
     color: template.color,
     category: template.category
   }));

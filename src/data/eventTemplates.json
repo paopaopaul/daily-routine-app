@@ -3,7 +3,6 @@
     {
       "id": "class",
       "title": "上课",
-      "description": "课程学习时间",
       "duration": 4,
       "color": "#FF6B6B",
       "category": "学习"
@@ -11,7 +10,6 @@
     {
       "id": "work",
       "title": "工作",
-      "description": "工作时间",
       "duration": 8,
       "color": "#4ECDC4",
       "category": "工作"
@@ -19,7 +17,6 @@
     {
       "id": "exercise",
       "title": "运动",
-      "description": "健身锻炼时间",
       "duration": 1,
       "color": "#45B7D1",
       "category": "健康"
@@ -27,7 +24,6 @@
     {
       "id": "study",
       "title": "自习",
-      "description": "自主学习时间",
       "duration": 2,
       "color": "#96CEB4",
       "category": "学习"
@@ -35,7 +31,6 @@
     {
       "id": "meeting",
       "title": "会议",
-      "description": "团队会议",
       "duration": 1,
       "color": "#FFEAA7",
       "category": "工作"
@@ -43,7 +38,6 @@
     {
       "id": "break",
       "title": "休息",
-      "description": "休息放松时间",
       "duration": 0.5,
       "color": "#DDA0DD",
       "category": "生活"
@@ -51,7 +45,6 @@
     {
       "id": "reading",
       "title": "阅读",
-      "description": "阅读书籍时间",
       "duration": 1,
       "color": "#98D8C8",
       "category": "学习"
@@ -59,7 +52,6 @@
     {
       "id": "cooking",
       "title": "做饭",
-      "description": "准备餐食",
       "duration": 1,
       "color": "#F7DC6F",
       "category": "生活"

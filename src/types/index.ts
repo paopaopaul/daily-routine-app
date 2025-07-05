@@ -17,10 +17,10 @@ export interface RoutineCategory {
 export interface EventTemplate {
   id: string;
   title: string;
-  description: string;
   duration: number; // 小时数
   color: string;
   category: string;
+  priority?: 'low' | 'medium' | 'high'; // 紧急程度
 }
 
 // 周历事件类型 - 更新为使用具体日期
@@ -31,7 +31,6 @@ export interface WeeklyEvent {
   startTime: string; // HH:MM 格式
   endTime: string; // HH:MM 格式
   title: string;
-  description: string;
   color: string;
   category: string;
 }

@@ -15,14 +15,31 @@ const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<"weekly" | "daily">("weekly");
   const [weeklyEvents, setWeeklyEvents] = useState<WeeklyEvent[]>([]);
   const [dailyRoutines, setDailyRoutines] = useState<RoutineItem[]>([]);
+  const [currentWeekStart, setCurrentWeekStart] = useState<Date>(() => {
+    // 获取本周开始日期（周日）
+    const today = new Date();
+    const currentDay = today.getDay();
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - currentDay);
+    startOfWeek.setHours(0, 0, 0, 0);
+    return startOfWeek;
+  });
+  const [eventTemplates, setEventTemplates] = useState<EventTemplate[]>(() => {
+    const saved = localStorage.getItem("event-templates");
+    if (saved) return JSON.parse(saved);
+    return eventTemplatesData.eventTemplates;
+  });
 
   const [currentDate] = useState(new Date().toLocaleDateString("zh-CN"));
-  const eventTemplates: EventTemplate[] = eventTemplatesData.eventTemplates;
 
   useEffect(() => {
     localStorage.setItem("daily-routines", JSON.stringify(dailyRoutines));
     localStorage.setItem("weekly-events", JSON.stringify(weeklyEvents));
   }, [dailyRoutines, weeklyEvents]);
+
+  useEffect(() => {
+    localStorage.setItem("event-templates", JSON.stringify(eventTemplates));
+  }, [eventTemplates]);
 
   useEffect(() => {
     const savedEvents = localStorage.getItem("weekly-events");
@@ -45,7 +62,7 @@ const App: React.FC = () => {
     const routines = todayEvents.map((event) => ({
       id: event.id,
       title: event.title,
-      description: event.description,
+      description: event.title, // 使用标题作为描述
       time: event.startTime,
       category: getCategoryFromTime(event.startTime),
       completed: false,
@@ -71,12 +88,6 @@ const App: React.FC = () => {
     );
   };
 
-  const handleResetAll = () => {
-    setDailyRoutines((prevRoutines) =>
-      prevRoutines.map((routine) => ({ ...routine, completed: false }))
-    );
-  };
-
   const handleEventAdd = (event: WeeklyEvent) => {
     setWeeklyEvents((prev) => {
       const newEvents = [...prev, event];
@@ -96,6 +107,33 @@ const App: React.FC = () => {
     totalRoutines > 0 ? Math.round((totalCompleted / totalRoutines) * 100) : 0;
 
   const categories = getRoutineCategories(dailyRoutines);
+
+  const handleAddTemplate = (template: EventTemplate) => {
+    setEventTemplates((prev) => [...prev, template]);
+  };
+
+  const handleDeleteTemplate = (templateId: string) => {
+    // 删除事件模板
+    setEventTemplates((prev) => prev.filter((t) => t.id !== templateId));
+
+    // 同时删除周历中所有使用该模板的事件
+    setWeeklyEvents((prev) =>
+      prev.filter((event) => event.templateId !== templateId)
+    );
+  };
+
+  const handleUpdateTemplate = (
+    templateId: string,
+    updatedTemplate: EventTemplate
+  ) => {
+    setEventTemplates((prev) =>
+      prev.map((t) => (t.id === templateId ? updatedTemplate : t))
+    );
+  };
+
+  const handleWeekChange = (newWeekStart: Date) => {
+    setCurrentWeekStart(newWeekStart);
+  };
 
   return (
     <div className="app">
@@ -120,6 +158,9 @@ const App: React.FC = () => {
                     );
                     e.dataTransfer.effectAllowed = "copy";
                   }}
+                  onAddTemplate={handleAddTemplate}
+                  onDeleteTemplate={handleDeleteTemplate}
+                  onUpdateTemplate={handleUpdateTemplate}
                 />
               </div>
               <div className="calendar-container">
@@ -127,6 +168,8 @@ const App: React.FC = () => {
                   events={weeklyEvents}
                   onEventAdd={handleEventAdd}
                   onEventDelete={handleEventDelete}
+                  currentWeekStart={currentWeekStart}
+                  onWeekChange={handleWeekChange}
                 />
               </div>
             </div>

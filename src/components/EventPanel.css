@@ -1,9 +1,10 @@
 .event-panel {
   background: white;
   border-radius: 12px;
-  padding: 24px;
+  padding: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   margin: 20px 0;
+  max-width: 350px;
   max-height: 600px;
   overflow-y: auto;
 }
@@ -49,6 +50,212 @@
   gap: 8px;
 }
 
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.add-event-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.add-event-btn:hover {
+  background: #0056b3;
+  transform: scale(1.1);
+}
+
+.add-event-form {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 2px solid #e9ecef;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 15px;
+  align-items: flex-end;
+}
+
+.form-row:last-child {
+  margin-bottom: 0;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.form-field:last-of-type {
+  margin-bottom: 0;
+}
+
+/* 第二行的特殊布局 */
+.form-row:nth-child(2) .form-field {
+  flex: 0 0 auto;
+  margin-bottom: 0;
+}
+
+.form-row:nth-child(2) .form-buttons {
+  flex: 1;
+  justify-content: flex-end;
+}
+
+/* 第三行的取消按钮居中 */
+.form-row:nth-child(3) .form-buttons {
+  justify-content: center;
+  width: 100%;
+}
+
+/* 第五行的紧急程度布局 */
+.form-row:nth-child(5) .form-field {
+  flex: 1;
+  margin-bottom: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-row:nth-child(5) .form-field-label {
+  margin-bottom: 6px;
+  line-height: 1;
+  height: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.form-row:nth-child(5) {
+  gap: 8px;
+  align-items: flex-start;
+}
+
+/* 第六行的按钮布局 */
+.form-row:nth-child(6) .form-buttons {
+  justify-content: space-between;
+  width: 100%;
+  gap: 8px;
+}
+
+.form-row:nth-child(6) .submit-btn,
+.form-row:nth-child(6) .cancel-btn {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 16px;
+  font-size: 13px;
+}
+
+.form-field-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.form-row input,
+.form-row select,
+.form-field input,
+.form-field select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+}
+
+.form-row input:focus,
+.form-row select:focus,
+.form-field input:focus,
+.form-field select:focus {
+  outline: none;
+  border-color: #4CAF50;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+  transform: translateY(-1px);
+}
+
+.form-row input[type="number"],
+.form-field input[type="number"] {
+  min-width: 60px;
+}
+
+.form-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+
+.submit-btn,
+.cancel-btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  min-width: 80px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.submit-btn {
+  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  color: white;
+}
+
+.submit-btn:hover {
+  background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+}
+
+.cancel-btn {
+  background: linear-gradient(135deg, #f44336 0%, #da190b 100%);
+  color: white;
+}
+
+.cancel-btn:hover {
+  background: linear-gradient(135deg, #da190b 0%, #c62828 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(244, 67, 54, 0.3);
+}
+
+/* 响应式调整 */
 @media (max-width: 768px) {
   .event-panel {
     padding: 16px;
@@ -60,5 +267,31 @@
   
   .category-title {
     font-size: 16px;
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .form-field {
+    width: 100%;
+  }
+  
+  .form-row input,
+  .form-row select,
+  .form-field input,
+  .form-field select {
+    width: 100%;
+  }
+  
+  .form-buttons {
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .submit-btn,
+  .cancel-btn {
+    flex: 1;
   }
 } 

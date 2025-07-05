@@ -1,9 +1,8 @@
 .weekly-calendar {
   background: white;
-  border-radius: 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  margin: 20px 0;
 }
 
 .calendar-header {
@@ -56,7 +55,8 @@
   display: grid;
   grid-template-columns: 80px repeat(7, 1fr);
   border-bottom: 1px solid #f0f0f0;
-  min-height: 40px;
+  height: 40px;
+  overflow: hidden;
 }
 
 .time-slot {
@@ -73,7 +73,8 @@
 
 .calendar-cell {
   border-right: 1px solid #f0f0f0;
-  min-height: 40px;
+  height: 40px;
+  overflow: hidden;
   padding: 2px;
   position: relative;
   transition: background-color 0.2s ease;
@@ -101,11 +102,36 @@
   transition: all 0.2s ease;
   position: relative;
   overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-height: 32px;
+  line-height: 24px;
+  display: flex;
+  align-items: center;
 }
 
 .calendar-event:hover {
   transform: scale(1.02);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+}
+
+/* 简化的悬浮提示样式 */
+.calendar-event:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  white-space: nowrap;
+  z-index: 1000;
+  margin-bottom: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .event-content {
@@ -113,11 +139,16 @@
   justify-content: space-between;
   align-items: center;
   height: 100%;
+  width: 100%;
 }
 
 .event-title {
   font-weight: 600;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  flex: 1 1 auto;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .delete-event-btn {
@@ -134,6 +165,8 @@
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
+  margin-left: 8px;
+  flex-shrink: 0;
 }
 
 .delete-event-btn:hover {
@@ -163,4 +196,49 @@
   .day-display {
     font-size: 10px;
   }
+}
+
+/* 周导航样式 */
+.calendar-week-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+  border-radius: 8px 8px 0 0;
+}
+
+.week-nav-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.week-nav-btn:hover {
+  background: #0056b3;
+  transform: scale(1.05);
+}
+
+.week-nav-btn:active {
+  transform: scale(0.95);
+}
+
+.week-range-display {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+  flex: 1;
+  margin: 0 16px;
 } 

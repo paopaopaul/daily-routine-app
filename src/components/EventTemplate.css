@@ -8,6 +8,7 @@
   cursor: grab;
   transition: all 0.3s ease;
   user-select: none;
+  position: relative;
 }
 
 .event-template:hover {
@@ -59,4 +60,130 @@
   font-size: 11px;
   font-weight: 500;
   text-transform: uppercase;
+}
+
+.template-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.delete-template-btn {
+  background: rgba(244, 67, 54, 0.8);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  opacity: 0;
+}
+
+.event-template:hover .delete-template-btn {
+  opacity: 1;
+}
+
+.delete-template-btn:hover {
+  background: #f44336;
+  transform: scale(1.1);
+}
+
+/* 编辑模式样式 */
+.event-template.editing {
+  background-color: #f8f9fa;
+  border: 2px solid #007bff;
+}
+
+.edit-form {
+  padding: 8px;
+}
+
+.edit-form .form-field {
+  margin-bottom: 8px;
+}
+
+.edit-input,
+.edit-select {
+  width: 100%;
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 12px;
+  background-color: white;
+}
+
+.edit-input:focus,
+.edit-select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.edit-actions {
+  display: flex;
+  gap: 4px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.save-btn,
+.cancel-btn {
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.save-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.save-btn:hover {
+  background-color: #218838;
+}
+
+.cancel-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background-color: #c82333;
+}
+
+.template-edit-action {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.event-template:hover .template-edit-action {
+  opacity: 1;
+}
+
+.edit-template-btn {
+  background: none;
+  border: none;
+  color: #000;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  font-weight: bold;
+}
+
+.edit-template-btn:hover {
+  background-color: rgba(0, 0, 0, 0.1);
 } 
