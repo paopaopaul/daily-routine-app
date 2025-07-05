@@ -1,10 +1,6 @@
-import React, { useRef, useEffect, useState, useMemo } from "react";
+import React, { useRef, useEffect, useMemo } from "react";
 import { WeeklyEvent, EventTemplate } from "../types";
-import {
-  getCurrentWeekDates,
-  formatDateDisplay,
-  getDayOfWeek,
-} from "../utils/weeklyUtils";
+import { formatDateDisplay, getDayOfWeek } from "../utils/weeklyUtils";
 import "./WeeklyCalendar.css";
 
 interface WeeklyCalendarProps {
@@ -67,10 +63,10 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
     }
   };
 
-  // 右侧时间槽：每小时
+  // 时间槽：从1点到23点，每小时（不显示0点和24点）
   const timeSlots = Array.from(
-    { length: 24 },
-    (_, i) => `${i.toString().padStart(2, "0")}:00`
+    { length: 23 },
+    (_, i) => `${(i + 1).toString().padStart(2, "0")}:00`
   );
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -107,14 +103,25 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
       const templateData = e.dataTransfer.getData("text/plain");
 
       if (!templateData) {
+        console.log("No template data found");
         return;
       }
 
       const draggedTemplate: EventTemplate = JSON.parse(templateData);
 
       if (!draggedTemplate) {
+        console.log("Failed to parse dragged template");
         return;
       }
+
+      console.log(
+        "Dropping template:",
+        draggedTemplate,
+        "on date:",
+        date,
+        "time:",
+        time
+      );
 
       const [hours, minutes] = time.split(":").map(Number);
       const startTime = `${hours.toString().padStart(2, "0")}:${minutes
@@ -150,6 +157,7 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
         category: draggedTemplate.category,
       };
 
+      console.log("Creating new event:", newEvent);
       onEventAdd(newEvent);
     } catch (error) {
       console.error("Error parsing dragged template:", error);
@@ -159,9 +167,9 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
   const calendarBodyRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // 每小时一行，每行30px，8点是第8行
+    // 每小时一行，每行35px，8点是第8行
     if (calendarBodyRef.current) {
-      calendarBodyRef.current.scrollTop = 8 * 30;
+      calendarBodyRef.current.scrollTop = 8 * 35;
     }
   }, []);
 
@@ -196,50 +204,55 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
       </div>
 
       <div className="calendar-body" ref={calendarBodyRef}>
-        {timeSlots.map((time) => (
-          <div key={time} className="time-row">
-            <div className="time-slot">{time}</div>
-            {weekDates.map((date) => {
-              // 该格子所有覆盖的事件
-              const slotEvents = events.filter(
-                (event) => event.date === date && isEventInSlot(event, time)
-              );
-              return (
-                <div
-                  key={`${date}-${time}`}
-                  className="calendar-cell"
-                  onDragOver={handleDragOver}
-                  onDragEnter={handleDragEnter}
-                  onDragLeave={handleDragLeave}
-                  onDrop={(e) => handleDrop(e, date, time)}
-                >
-                  {slotEvents.map((event) => {
-                    return (
-                      <div
-                        key={event.id}
-                        className="calendar-event"
-                        style={{
-                          backgroundColor: event.color,
-                          height: "32px",
-                        }}
-                      >
-                        <div className="event-content">
-                          <span className="event-title">{event.title}</span>
-                          <button
-                            className="delete-event-btn"
-                            onClick={() => onEventDelete(event.id)}
-                          >
-                            ×
-                          </button>
+        {Array.from({ length: 24 }, (_, i) => {
+          const time = `${i.toString().padStart(2, "0")}:00`;
+          const displayTime = i === 0 ? "" : time;
+          return (
+            <div key={time} className="time-slot">
+              <div className="time-column">
+                <span className="time-label">{displayTime}</span>
+              </div>
+              {weekDates.map((date) => {
+                // 该格子所有覆盖的事件
+                const slotEvents = events.filter(
+                  (event) => event.date === date && isEventInSlot(event, time)
+                );
+                return (
+                  <div
+                    key={`${date}-${time}`}
+                    className="calendar-cell"
+                    onDragOver={handleDragOver}
+                    onDragEnter={handleDragEnter}
+                    onDragLeave={handleDragLeave}
+                    onDrop={(e) => handleDrop(e, date, time)}
+                  >
+                    {slotEvents.map((event) => {
+                      return (
+                        <div
+                          key={event.id}
+                          className="calendar-event"
+                          style={{
+                            backgroundColor: event.color,
+                          }}
+                        >
+                          <div className="event-content">
+                            <span className="event-title">{event.title}</span>
+                            <button
+                              className="delete-event-btn"
+                              onClick={() => onEventDelete(event.id)}
+                            >
+                              ×
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              );
-            })}
-          </div>
-        ))}
+                      );
+                    })}
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

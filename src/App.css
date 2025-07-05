@@ -1,150 +1,274 @@
 .app {
-  min-height: 100vh;
-  padding: 20px;
+  height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 0;
+  overflow: hidden;
 }
 
 .app-container {
-  max-width: 1400px;
-  margin: 0 auto;
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 20px;
-  padding: 32px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .app-header {
-  text-align: center;
-  margin-bottom: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 0;
+  margin-bottom: 0;
+  flex-shrink: 0;
+  height: 60px;
+}
+
+.header-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.header-center {
+  display: flex;
+  align-items: center;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
 }
 
 .app-title {
-  font-size: 36px;
-  font-weight: 800;
-  color: #333;
-  margin-bottom: 8px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+  background: white;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .app-date {
-  font-size: 18px;
-  color: #666;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.9);
   font-weight: 500;
+}
+
+.data-management {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.data-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.data-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  color: white;
+  transform: translateY(-1px);
+}
+
+.import-btn:hover {
+  background: rgba(209, 236, 241, 0.3);
+  border-color: rgba(190, 229, 235, 0.5);
+}
+
+.clear-btn:hover {
+  background: rgba(248, 215, 218, 0.3);
+  border-color: rgba(245, 198, 203, 0.5);
 }
 
 /* 周历视图样式 */
 .weekly-view {
-  margin: 20px 0;
+  margin: 0;
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .weekly-layout {
   display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: 24px;
-  align-items: start;
+  grid-template-columns: 320px 1fr;
+  gap: 0;
+  align-items: stretch;
+  padding: 0;
+  flex: 1;
+  overflow: hidden;
 }
 
 .event-panel-container {
-  position: sticky;
-  top: 20px;
+  background: white;
+  border-right: 1px solid #e9ecef;
+  overflow-y: auto;
+  padding: 16px;
+  height: 100%;
 }
 
 .calendar-container {
-  min-height: 600px;
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 /* 每日视图样式 */
 .daily-view {
-  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px;
+  gap: 20px;
 }
 
 .overall-progress {
-  background: #f8f9fa;
-  border-radius: 16px;
-  padding: 24px;
-  margin-bottom: 24px;
-  border: 1px solid #e9ecef;
+  background: white;
+  border-radius: 12px;
+  padding: 16px 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e1e5e9;
+  width: 100%;
+  margin: 0;
 }
 
 .progress-stats {
   display: flex;
   justify-content: space-around;
-  margin-top: 16px;
-  flex-wrap: wrap;
-  gap: 16px;
+  margin-top: 12px;
+  gap: 20px;
 }
 
 .stat-item {
   font-size: 14px;
   color: #666;
-  background: white;
-  padding: 8px 16px;
-  border-radius: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.reset-section {
   text-align: center;
-  margin-bottom: 32px;
 }
 
-.reset-button {
-  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 25px;
-  font-size: 16px;
+.stat-item strong {
+  color: #333;
   font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.daily-columns {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  flex: 1;
+  min-height: 0;
+}
+
+.daily-column {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e1e5e9;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.column-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e1e5e9;
+  background: #f8f9fa;
+}
+
+.column-title {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.column-progress {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.column-stats {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+.column-items {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .app-main {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
+  flex: 1;
+  overflow-y: auto;
 }
 
 /* 空状态样式 */
 .empty-state {
   text-align: center;
-  padding: 60px 20px;
+  padding: 40px 20px;
   background: #f8f9fa;
-  border-radius: 16px;
-  margin: 40px 0;
+  border-radius: 12px;
+  margin: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .empty-icon {
-  font-size: 64px;
-  margin-bottom: 20px;
+  font-size: 48px;
+  margin-bottom: 16px;
 }
 
 .empty-title {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 600;
   color: #333;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .empty-description {
-  font-size: 16px;
+  font-size: 14px;
   color: #666;
-  margin-bottom: 30px;
-  line-height: 1.5;
+  margin-bottom: 20px;
+  line-height: 1.4;
 }
 
 .switch-view-btn {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
-  padding: 12px 24px;
-  border-radius: 25px;
-  font-size: 16px;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -158,25 +282,161 @@
 
 .app-footer {
   text-align: center;
-  margin-top: 40px;
-  padding-top: 24px;
+  padding: 8px 16px;
   border-top: 1px solid #e9ecef;
+  background: white;
+  flex-shrink: 0;
 }
 
 .app-footer p {
   color: #666;
-  font-size: 14px;
+  font-size: 12px;
   font-style: italic;
+  margin: 0;
 }
 
-@media (max-width: 1200px) {
-  .weekly-layout {
-    grid-template-columns: 1fr;
+/* 响应式设计 */
+@media (max-width: 1600px) {
+  .daily-columns {
     gap: 16px;
   }
   
-  .event-panel-container {
-    position: static;
+  .column-header {
+    padding: 14px 16px;
+  }
+  
+  .column-title {
+    font-size: 16px;
+  }
+  
+  .column-items {
+    padding: 14px;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 1400px) {
+  .daily-columns {
+    gap: 14px;
+  }
+  
+  .column-header {
+    padding: 12px 14px;
+  }
+  
+  .column-title {
+    font-size: 15px;
+  }
+  
+  .column-items {
+    padding: 12px;
+    gap: 8px;
+  }
+  
+  .overall-progress {
+    padding: 14px 16px;
+  }
+  
+  .progress-stats {
+    gap: 16px;
+  }
+  
+  .stat-item {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .daily-columns {
+    gap: 12px;
+  }
+  
+  .column-header {
+    padding: 10px 12px;
+  }
+  
+  .column-title {
+    font-size: 14px;
+  }
+  
+  .column-items {
+    padding: 10px;
+    gap: 6px;
+  }
+  
+  .overall-progress {
+    padding: 12px 14px;
+  }
+  
+  .progress-stats {
+    gap: 12px;
+  }
+  
+  .stat-item {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .daily-columns {
+    gap: 10px;
+  }
+  
+  .column-header {
+    padding: 8px 10px;
+  }
+  
+  .column-title {
+    font-size: 13px;
+  }
+  
+  .column-items {
+    padding: 8px;
+    gap: 5px;
+  }
+  
+  .overall-progress {
+    padding: 10px 12px;
+  }
+  
+  .progress-stats {
+    gap: 10px;
+  }
+  
+  .stat-item {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 900px) {
+  .daily-columns {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  
+  .column-header {
+    padding: 10px 12px;
+  }
+  
+  .column-title {
+    font-size: 14px;
+  }
+  
+  .column-items {
+    padding: 10px;
+    gap: 8px;
+  }
+  
+  .overall-progress {
+    padding: 12px 14px;
+  }
+  
+  .progress-stats {
+    gap: 12px;
+  }
+  
+  .stat-item {
+    font-size: 12px;
   }
 }
 

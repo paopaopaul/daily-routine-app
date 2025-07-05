@@ -1,0 +1,87 @@
+{
+  "weeklyEvents": [
+    {
+      "id": "1703123456789-0.123456789",
+      "templateId": "work",
+      "date": "2023-12-20",
+      "startTime": "09:00",
+      "endTime": "17:00",
+      "title": "工作",
+      "color": "#4ECDC4",
+      "category": "工作"
+    },
+    {
+      "id": "1703123456790-0.987654321",
+      "templateId": "exercise",
+      "date": "2023-12-20",
+      "startTime": "18:00",
+      "endTime": "19:00",
+      "title": "运动",
+      "color": "#45B7D1",
+      "category": "健康"
+    },
+    {
+      "id": "1703123456791-0.456789123",
+      "templateId": "study",
+      "date": "2023-12-21",
+      "startTime": "14:00",
+      "endTime": "16:00",
+      "title": "自习",
+      "color": "#96CEB4",
+      "category": "学习"
+    }
+  ],
+  "dailyRoutines": [
+    {
+      "id": "1703123456789-0.123456789",
+      "title": "工作",
+      "description": "工作",
+      "time": "09:00",
+      "category": "morning",
+      "completed": false
+    },
+    {
+      "id": "1703123456790-0.987654321",
+      "title": "运动",
+      "description": "运动",
+      "time": "18:00",
+      "category": "evening",
+      "completed": true
+    }
+  ],
+  "eventTemplates": [
+    {
+      "id": "work",
+      "title": "工作",
+      "duration": 8,
+      "color": "#4ECDC4",
+      "category": "工作"
+    },
+    {
+      "id": "exercise",
+      "title": "运动",
+      "duration": 1,
+      "color": "#45B7D1",
+      "category": "健康"
+    },
+    {
+      "id": "study",
+      "title": "自习",
+      "duration": 2,
+      "color": "#96CEB4",
+      "category": "学习"
+    },
+    {
+      "id": "custom-1703123456789",
+      "title": "自定义事件",
+      "duration": 1.5,
+      "color": "#FF9800",
+      "category": "学习",
+      "priority": "medium"
+    }
+  ],
+  "currentWeekStart": "2023-12-17T00:00:00.000Z",
+  "currentView": "weekly",
+  "exportDate": "2023-12-20T10:30:00.000Z",
+  "version": "1.0.0"
+} 

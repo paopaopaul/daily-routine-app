@@ -1,45 +1,45 @@
 .view-toggle {
   display: flex;
   justify-content: center;
-  margin: 20px 0;
-  background: white;
-  border-radius: 12px;
-  padding: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .toggle-btn {
-  padding: 12px 24px;
+  padding: 8px 16px;
   border: none;
   background: transparent;
-  color: #666;
-  font-size: 16px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  border-radius: 8px;
+  border-radius: 16px;
   transition: all 0.3s ease;
-  margin: 0 4px;
+  margin: 0 2px;
 }
 
 .toggle-btn:hover {
-  background: #f8f9fa;
-  color: #333;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
 }
 
 .toggle-btn.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  background: white;
+  color: #667eea;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .toggle-btn.active:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 @media (max-width: 768px) {
   .toggle-btn {
-    padding: 10px 16px;
-    font-size: 14px;
+    padding: 6px 12px;
+    font-size: 12px;
   }
 } 

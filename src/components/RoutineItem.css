@@ -1,16 +1,17 @@
 .routine-item {
   background: white;
-  border-radius: 12px;
-  padding: 16px;
-  margin: 12px 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 12px;
+  margin: 0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
-  border-left: 4px solid #4CAF50;
+  border-left: 3px solid #4CAF50;
+  border: 1px solid #e1e5e9;
 }
 
 .routine-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .routine-item.completed {
@@ -22,31 +23,32 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .routine-item-time {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
   color: #666;
   background: #f5f5f5;
-  padding: 4px 8px;
-  border-radius: 6px;
+  padding: 3px 6px;
+  border-radius: 4px;
 }
 
 .toggle-button {
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   border: 2px solid #ddd;
   background: white;
   color: #666;
-  font-size: 16px;
+  font-size: 12px;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .toggle-button:hover {
@@ -65,16 +67,17 @@
 }
 
 .routine-item-title {
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 600;
   color: #333;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
+  line-height: 1.3;
 }
 
 .routine-item-description {
-  font-size: 14px;
+  font-size: 12px;
   color: #666;
-  line-height: 1.5;
+  line-height: 1.4;
 }
 
 .routine-item.completed .routine-item-title {
@@ -84,4 +87,110 @@
 
 .routine-item.completed .routine-item-description {
   color: #999;
+}
+
+/* 响应式设计 */
+@media (max-width: 1600px) {
+  .routine-item {
+    padding: 10px;
+  }
+  
+  .routine-item-title {
+    font-size: 13px;
+  }
+  
+  .routine-item-time {
+    font-size: 11px;
+    padding: 2px 5px;
+  }
+  
+  .toggle-button {
+    width: 22px;
+    height: 22px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 1400px) {
+  .routine-item {
+    padding: 8px;
+  }
+  
+  .routine-item-title {
+    font-size: 12px;
+  }
+  
+  .routine-item-time {
+    font-size: 10px;
+    padding: 2px 4px;
+  }
+  
+  .toggle-button {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .routine-item {
+    padding: 6px;
+  }
+  
+  .routine-item-title {
+    font-size: 11px;
+  }
+  
+  .routine-item-time {
+    font-size: 9px;
+    padding: 1px 3px;
+  }
+  
+  .toggle-button {
+    width: 18px;
+    height: 18px;
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .routine-item {
+    padding: 5px;
+  }
+  
+  .routine-item-title {
+    font-size: 10px;
+  }
+  
+  .routine-item-time {
+    font-size: 8px;
+    padding: 1px 2px;
+  }
+  
+  .toggle-button {
+    width: 16px;
+    height: 16px;
+    font-size: 8px;
+  }
+}
+
+@media (max-width: 900px) {
+  .routine-item {
+    padding: 8px;
+  }
+  
+  .routine-item-title {
+    font-size: 12px;
+  }
+  
+  .routine-item-time {
+    font-size: 10px;
+    padding: 2px 4px;
+  }
+  
+  .toggle-button {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+  }
 } 
