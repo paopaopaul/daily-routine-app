@@ -63,12 +63,6 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
     }
   };
 
-  // 时间槽：从1点到23点，每小时（不显示0点和24点）
-  const timeSlots = Array.from(
-    { length: 23 },
-    (_, i) => `${(i + 1).toString().padStart(2, "0")}:00`
-  );
-
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();

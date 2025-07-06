@@ -2,6 +2,7 @@
   "name": "daily-routine-app",
   "version": "1.0.0",
   "private": true,
+  "homepage": "./",
   "dependencies": {
     "@types/node": "^16.18.0",
     "@types/react": "^18.2.0",
@@ -16,7 +17,16 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "electron": "electron .",
+    "electron-dev": "concurrently \"npm start\" \"wait-on http://localhost:3000 && electron .\"",
+    "electron-pack": "npm run build && electron-builder",
+    "dist": "npm run build && electron-builder --publish=never",
+    "pack": "npm run build && electron-builder --dir",
+    "dist-mac": "npm run build && electron-builder --mac --publish=never",
+    "dist-win": "npm run build && electron-builder --win --publish=never",
+    "dist-linux": "npm run build && electron-builder --linux --publish=never",
+    "dist-all": "npm run build && electron-builder -mwl --publish=never"
   },
   "eslintConfig": {
     "extends": [
@@ -37,6 +47,61 @@
     ]
   },
   "devDependencies": {
-    "electron": "^37.2.0"
+    "concurrently": "^9.2.0",
+    "electron": "^37.2.0",
+    "electron-builder": "^26.0.12",
+    "electron-is-dev": "^3.0.1",
+    "wait-on": "^8.0.3"
+  },
+  "main": "public/electron.js",
+  "build": {
+    "appId": "com.dailyroutine.app",
+    "productName": "每日例行程序",
+    "directories": {
+      "output": "dist"
+    },
+    "compression": "maximum",
+    "removePackageScripts": true,
+    "removePackageKeywords": true,
+    "files": [
+      "build/**/*",
+      "public/electron.js"
+    ],
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["x64", "arm64"]
+        },
+        {
+          "target": "zip",
+          "arch": ["x64", "arm64"]
+        }
+      ]
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        {
+          "target": "zip",
+          "arch": ["x64"]
+        }
+      ]
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": ["x64"]
+        },
+        {
+          "target": "deb",
+          "arch": ["x64"]
+        }
+      ]
+    }
   }
 }
