@@ -43,6 +43,31 @@
 .header-right {
   display: flex;
   align-items: center;
+  gap: 12px;
+}
+
+.settings-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.settings-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
+}
+
+.settings-button:active {
+  transform: scale(0.95);
 }
 
 .app-title {

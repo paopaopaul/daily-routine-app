@@ -15,7 +15,9 @@ const RoutineItem: React.FC<RoutineItemProps> = ({ item, onToggle }) => {
       style={{ cursor: "pointer" }}
     >
       <div className="routine-item-header">
-        <div className="routine-item-time">{item.time}</div>
+        <div className="routine-item-time">
+          {item.time} - {item.endTime}
+        </div>
         <span
           className={`toggle-button ${item.completed ? "completed" : ""}`}
           aria-label={item.completed ? "标记为未完成" : "标记为已完成"}

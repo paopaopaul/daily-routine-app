@@ -5,11 +5,14 @@ import RoutineItem from "./components/RoutineItem";
 import ViewToggle from "./components/ViewToggle";
 import WeeklyCalendar from "./components/WeeklyCalendar";
 import EventPanel from "./components/EventPanel";
-import { RoutineItem as RoutineItemType } from "./types";
+import SettingsModal from "./components/SettingsModal";
+import NotificationAlert from "./components/NotificationAlert";
+import { RoutineItem as RoutineItemType, NotificationSettings } from "./types";
 import { WeeklyEvent, EventTemplate } from "./types";
 import eventTemplatesData from "./data/eventTemplates.json";
 import { getRoutineCategories } from "./data/routines";
 import { getCategoryFromTime } from "./utils/weeklyUtils";
+import { notificationService } from "./utils/notificationService";
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<"weekly" | "daily">("weekly");
@@ -30,6 +33,19 @@ const App: React.FC = () => {
     if (saved) return JSON.parse(saved);
     return eventTemplatesData.eventTemplates;
   });
+
+  // 通知相关状态
+  const [notificationSettings, setNotificationSettings] =
+    useState<NotificationSettings>(() => {
+      const saved = localStorage.getItem("notification-settings");
+      if (saved) return JSON.parse(saved);
+      return { enabled: true, defaultSnooze: 5, notificationStyle: "banner" };
+    });
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [notificationAlert, setNotificationAlert] = useState<{
+    isOpen: boolean;
+    routine: RoutineItemType | null;
+  }>({ isOpen: false, routine: null });
 
   const [currentDate] = useState(new Date().toLocaleDateString("zh-CN"));
 
@@ -57,6 +73,36 @@ const App: React.FC = () => {
   useEffect(() => {
     localStorage.setItem("current-view", currentView);
   }, [currentView]);
+
+  // 保存通知设置到localStorage
+  useEffect(() => {
+    localStorage.setItem(
+      "notification-settings",
+      JSON.stringify(notificationSettings)
+    );
+  }, [notificationSettings]);
+
+  // 初始化通知服务
+  useEffect(() => {
+    notificationService.init(
+      (routine) => {
+        setNotificationAlert({ isOpen: true, routine });
+      },
+      (routineId) => {
+        // 当用户点击"开始"时，可以在这里添加逻辑
+        console.log("Event started:", routineId);
+      }
+    );
+  }, []);
+
+  // 更新通知服务设置
+  useEffect(() => {
+    notificationService.setEnabled(notificationSettings.enabled);
+    notificationService.setDefaultSnooze(notificationSettings.defaultSnooze);
+    notificationService.setNotificationStyle(
+      notificationSettings.notificationStyle
+    );
+  }, [notificationSettings]);
 
   // 初始化时从localStorage加载数据
   useEffect(() => {
@@ -97,6 +143,21 @@ const App: React.FC = () => {
       setCurrentView(savedView);
     }
 
+    // 加载通知设置
+    const savedSettings = localStorage.getItem("notification-settings");
+    if (savedSettings) {
+      try {
+        setNotificationSettings(JSON.parse(savedSettings));
+      } catch (error) {
+        console.error("Error loading notification settings:", error);
+        setNotificationSettings({
+          enabled: true,
+          defaultSnooze: 5,
+          notificationStyle: "banner",
+        });
+      }
+    }
+
     // 标记数据加载完成
     setIsDataLoaded(true);
     console.log("Data loading completed");
@@ -113,33 +174,99 @@ const App: React.FC = () => {
       (event) => event.date === todayString
     );
 
-    const routines = todayEvents.map((event) => ({
-      id: event.id,
-      title: event.title,
-      description: event.title, // 使用标题作为描述
-      time: event.startTime,
-      category: getCategoryFromTime(event.startTime),
-      completed: false,
-    }));
+    // 获取当前已保存的每日例行程序，用于保留完成状态
+    const existingRoutines = dailyRoutines;
 
-    setDailyRoutines(routines);
+    const newRoutines = todayEvents.map((event) => {
+      // 查找是否已存在相同的例行程序，保留其完成状态
+      const existingRoutine = existingRoutines.find(
+        (routine) => routine.id === event.id
+      );
+
+      return {
+        id: event.id,
+        title: event.title,
+        description: event.title, // 使用标题作为描述
+        time: event.startTime,
+        endTime: event.endTime, // 添加结束时间
+        category: getCategoryFromTime(event.startTime),
+        completed: existingRoutine ? existingRoutine.completed : false,
+      };
+    });
+
+    // 按时间排序
+    const sortedRoutines = newRoutines.sort((a, b) => {
+      const timeA = new Date(`2000-01-01T${a.time}`);
+      const timeB = new Date(`2000-01-01T${b.time}`);
+      return timeA.getTime() - timeB.getTime();
+    });
+
+    setDailyRoutines(sortedRoutines);
+
+    // 更新通知定时器
+    updateNotificationTimers(sortedRoutines);
+  };
+
+  // 更新通知定时器
+  const updateNotificationTimers = (routines: RoutineItemType[]) => {
+    // 清除所有现有定时器
+    notificationService.clearAllTimers();
+
+    // 为每个未完成的事件添加通知定时器
+    routines.forEach((routine) => {
+      if (!routine.completed) {
+        notificationService.addEventNotification(routine);
+      }
+    });
   };
 
   const handleViewChange = (view: "weekly" | "daily") => {
     setCurrentView(view);
     if (view === "daily") {
-      convertWeeklyEventsToDailyRoutines();
+      // 检查今日事件是否有变化
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, "0");
+      const day = String(today.getDate()).padStart(2, "0");
+      const todayString = `${year}-${month}-${day}`;
+
+      const todayEvents = weeklyEvents.filter(
+        (event) => event.date === todayString
+      );
+
+      // 检查是否有新事件或删除的事件
+      const currentEventIds = new Set(todayEvents.map((event) => event.id));
+      const existingEventIds = new Set(
+        dailyRoutines.map((routine) => routine.id)
+      );
+
+      const hasNewEvents = todayEvents.some(
+        (event) => !existingEventIds.has(event.id)
+      );
+      const hasRemovedEvents = dailyRoutines.some(
+        (routine) => !currentEventIds.has(routine.id)
+      );
+
+      // 如果有变化或每日例行程序为空，则更新
+      if (hasNewEvents || hasRemovedEvents || dailyRoutines.length === 0) {
+        convertWeeklyEventsToDailyRoutines();
+      }
     }
   };
 
   const handleToggleRoutine = (id: string) => {
-    setDailyRoutines((prevRoutines) =>
-      prevRoutines.map((routine) =>
+    setDailyRoutines((prevRoutines) => {
+      const updatedRoutines = prevRoutines.map((routine) =>
         routine.id === id
           ? { ...routine, completed: !routine.completed }
           : routine
-      )
-    );
+      );
+
+      // 更新通知定时器
+      updateNotificationTimers(updatedRoutines);
+
+      return updatedRoutines;
+    });
   };
 
   const handleEventAdd = (event: WeeklyEvent) => {
@@ -196,6 +323,25 @@ const App: React.FC = () => {
     setCurrentWeekStart(newWeekStart);
   };
 
+  // 通知Alert处理函数
+  const handleNotificationStart = () => {
+    if (notificationAlert.routine) {
+      notificationService.handleStartEvent(notificationAlert.routine.id);
+      setNotificationAlert({ isOpen: false, routine: null });
+    }
+  };
+
+  const handleNotificationSnooze = (minutes: number) => {
+    if (notificationAlert.routine) {
+      notificationService.handleSnooze(notificationAlert.routine.id, minutes);
+      setNotificationAlert({ isOpen: false, routine: null });
+    }
+  };
+
+  const handleNotificationClose = () => {
+    setNotificationAlert({ isOpen: false, routine: null });
+  };
+
   // 数据管理功能
   const handleClearAllData = () => {
     if (window.confirm("确定要清除所有数据吗？此操作不可恢复。")) {
@@ -204,6 +350,12 @@ const App: React.FC = () => {
       setDailyRoutines([]);
       setEventTemplates(eventTemplatesData.eventTemplates);
       setCurrentView("weekly");
+      // 重置通知设置
+      setNotificationSettings({
+        enabled: true,
+        defaultSnooze: 5,
+        notificationStyle: "banner",
+      });
 
       // 重置当前周为本周
       const today = new Date();
@@ -232,6 +384,10 @@ const App: React.FC = () => {
               setWeeklyEvents(data.weeklyEvents);
               setDailyRoutines(data.dailyRoutines || []);
               setEventTemplates(data.eventTemplates);
+              // 导入通知设置
+              if (data.notificationSettings) {
+                setNotificationSettings(data.notificationSettings);
+              }
               // 不导入currentWeekStart，保持当前周
               if (data.currentView) {
                 setCurrentView(data.currentView);
@@ -251,6 +407,19 @@ const App: React.FC = () => {
     input.click();
   };
 
+  // 设置相关处理函数
+  const handleSettingsChange = (newSettings: NotificationSettings) => {
+    setNotificationSettings(newSettings);
+  };
+
+  const handleOpenSettings = () => {
+    setIsSettingsOpen(true);
+  };
+
+  const handleCloseSettings = () => {
+    setIsSettingsOpen(false);
+  };
+
   return (
     <div className="app">
       <div className="app-container">
@@ -266,22 +435,13 @@ const App: React.FC = () => {
             />
           </div>
           <div className="header-right">
-            <div className="data-management">
-              <button
-                className="data-btn import-btn"
-                onClick={handleImportData}
-                title="导入数据备份"
-              >
-                📥 导入数据
-              </button>
-              <button
-                className="data-btn clear-btn"
-                onClick={handleClearAllData}
-                title="清除所有数据"
-              >
-                🗑️ 清除数据
-              </button>
-            </div>
+            <button
+              className="settings-button"
+              onClick={handleOpenSettings}
+              title="设置"
+            >
+              ⚙️
+            </button>
           </div>
         </header>
 
@@ -385,6 +545,28 @@ const App: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* 设置模态框 */}
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={handleCloseSettings}
+        settings={notificationSettings}
+        onSettingsChange={handleSettingsChange}
+        onImportData={handleImportData}
+        onClearData={handleClearAllData}
+      />
+
+      {/* 通知Alert */}
+      {notificationAlert.routine && (
+        <NotificationAlert
+          isOpen={notificationAlert.isOpen}
+          onClose={handleNotificationClose}
+          routine={notificationAlert.routine}
+          onStart={handleNotificationStart}
+          onSnooze={handleNotificationSnooze}
+          defaultSnooze={notificationSettings.defaultSnooze}
+        />
+      )}
     </div>
   );
 };

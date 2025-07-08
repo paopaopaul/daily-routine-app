@@ -3,6 +3,7 @@ export interface RoutineItem {
   title: string;
   description: string;
   time: string;
+  endTime: string; // 添加结束时间
   completed: boolean;
   category: 'morning' | 'afternoon' | 'evening' | 'night';
 }
@@ -42,9 +43,17 @@ export interface TimeSlot {
   events: WeeklyEvent[];
 }
 
+// 通知设置类型
+export interface NotificationSettings {
+  enabled: boolean;
+  defaultSnooze: number; // 分钟数
+  notificationStyle: 'banner' | 'alert'; // 通知样式：横幅或提醒
+}
+
 // 应用状态类型
 export interface AppState {
   currentView: 'weekly' | 'daily';
   weeklyEvents: WeeklyEvent[];
   dailyRoutines: RoutineItem[];
+  notificationSettings: NotificationSettings;
 } 
