@@ -11,6 +11,13 @@
 # production
 /build
 
+# Electron build outputs
+/dist
+*.dmg
+*.zip
+*.blockmap
+*.yml
+
 # misc
 .DS_Store
 .env.local
